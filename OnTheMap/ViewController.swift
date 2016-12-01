@@ -7,12 +7,19 @@
 //
 
 import UIKit
+import FacebookLogin
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var signUpStack: UIStackView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        let loginButton = LoginButton(readPermissions: [.publicProfile])
+//        loginButton.center = view.center
+        signUpStack.addArrangedSubview(loginButton)
+        
     }
 
     override func didReceiveMemoryWarning() {
