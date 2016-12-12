@@ -53,12 +53,6 @@ class SetLocationViewController: UIViewController {
             if locationTextField.text != "" && locationTextField.text != "Add Your Location Here" {
                 findLocVC.myLocation = locationTextField.text!
             }
-            
-//            self.present(findLocVC, animated: false, completion: nil)
-            
         }
-        
-        
     }
-    
 }

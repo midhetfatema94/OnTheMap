@@ -39,7 +39,7 @@ class Model {
         task.resume()
     }
     
-    func logoutUserUdacity() {
+    func logoutUserUdacity(completion: @escaping ((JSON) -> Void)) {
         
         let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
         request.httpMethod = "DELETE"
@@ -53,12 +53,19 @@ class Model {
         }
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
-            if error != nil { // Handle error…
+            if error != nil {
                 return
             }
-            let range = Range(uncheckedBounds: (5, data!.count - 5))
-            let newData = data?.subdata(in: range) /* subset response data! */
-            print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
+            let range = Range(uncheckedBounds: (5, data!.count))
+            let newData = data?.subdata(in: range)
+            do {
+                let result = try JSONSerialization.jsonObject(with: newData!, options: []) as! [String:AnyObject]
+                print("response: \(JSON(result))")
+                completion(JSON(result))
+                
+            } catch {
+                print("Error: \(error)")
+            }
         }
         task.resume()
         
@@ -66,10 +73,6 @@ class Model {
     
     func loginUserFb(accessToken: String, completion: @escaping ((JSON) -> Void)) {
         
-//        let params: JSON = ["access_token": accessToken]
-//        let jsonFormat: JSON = ["facebook_mobile": params]
-//        
-//        let jsonData = try! jsonFormat.rawData()
         // create post request
         let url = URL(string: "https://www.udacity.com/api/session")!
         let request = NSMutableURLRequest(url: url)
@@ -134,10 +137,8 @@ class Model {
             if error != nil { // Handle error...
                 return
             }
-//            let range = Range(uncheckedBounds: (5, data!.count))
-//            let newData = data?.subdata(in: range) /* subset response data! */
             print("starts here")
-//            print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+
             do {
                 let result = try JSONSerialization.jsonObject(with: data!, options: []) as! [String:AnyObject]
                 print("response: \(JSON(result))")
@@ -146,7 +147,6 @@ class Model {
             } catch {
                 print("Error: \(error)")
             }
-//            print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
         }
         task.resume()
     }
@@ -189,7 +189,7 @@ class Model {
         request.httpBody = "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\",\"mapString\": \"\(mapString)\", \"mediaURL\": \"\(media)\",\"latitude\": \(latitude), \"longitude\": \(longitude)}".data(using: String.Encoding.utf8)
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
-            if error != nil { // Handle error…
+            if error != nil {
                 return
             }
             do {

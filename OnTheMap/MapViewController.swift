@@ -24,6 +24,32 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     @IBAction func logout(_ sender: UIBarButtonItem) {
+        
+        request.logoutUserUdacity(completion: { response in
+            
+            DispatchQueue.main.async {
+                
+                if let error = response.error {
+                    
+                    print("error creating request: \(error.localizedDescription)")
+                }
+                else if response != JSON.null {
+                    
+                    let allvcs = self.navigationController!.viewControllers
+                    
+                    for eachVC in allvcs {
+                        
+                        if eachVC.isKind(of: ViewController.self) {
+                            
+                            let vc = eachVC as! ViewController
+                            vc.loginManager.logOut()
+                        }
+                    }
+                    
+                    self.navigationController!.popToRootViewController(animated: true)
+                }
+            }
+        })
     }
     
     @IBAction func placePin(_ sender: UIBarButtonItem) {

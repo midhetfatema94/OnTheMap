@@ -22,6 +22,7 @@ class ViewController: UIViewController, LoginButtonDelegate {
     
     var accessTkn: AccessToken!
     let loginManager = LoginManager()
+    var loginButton: LoginButton!
     
     @IBAction func loginButton(_ sender: UIButton) {
         
@@ -55,7 +56,7 @@ class ViewController: UIViewController, LoginButtonDelegate {
         
         self.navigationController!.setNavigationBarHidden(true, animated: false)
         
-        let loginButton = LoginButton(readPermissions: [.publicProfile])
+        loginButton = LoginButton(readPermissions: [.publicProfile])
         signUpStack.addArrangedSubview(loginButton)
         
         if let accessToken = AccessToken.current {
