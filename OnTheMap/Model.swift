@@ -7,10 +7,11 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 class Model {
     
-    func loginUserUdacity(username: String, password: String) {
+    func loginUserUdacity(username: String, password: String, completion: @escaping ((JSON) -> Void)) {
         
         let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
         request.httpMethod = "POST"
@@ -19,12 +20,21 @@ class Model {
         request.httpBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}".data(using: String.Encoding.utf8)
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
-            if error != nil { // Handle error…
+            if error != nil { // Handle error...
                 return
             }
-            let range = Range(uncheckedBounds: (5, data!.count - 5))
+            let range = Range(uncheckedBounds: (5, data!.count))
             let newData = data?.subdata(in: range) /* subset response data! */
+            print("starts here")
             print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
+            do {
+                let result = try JSONSerialization.jsonObject(with: newData!, options: []) as! [String:AnyObject]
+                print("response: \(JSON(result))")
+                completion(JSON(result))
+
+            } catch {
+                print("Error: \(error)")
+            }
         }
         task.resume()
     }
@@ -54,22 +64,42 @@ class Model {
         
     }
     
-    func loginUserFb(accessToken: String) {
+    func loginUserFb(accessToken: String, completion: @escaping ((JSON) -> Void)) {
         
-        let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
+//        let params: JSON = ["access_token": accessToken]
+//        let jsonFormat: JSON = ["facebook_mobile": params]
+//        
+//        let jsonData = try! jsonFormat.rawData()
+        // create post request
+        let url = URL(string: "https://www.udacity.com/api/session")!
+        let request = NSMutableURLRequest(url: url)
         request.httpMethod = "POST"
+        print("access token is: \(accessToken)")
+        
+        // insert json data to the request
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = "{\"facebook_mobile\": {\"access_token\": \"\(accessToken)\"}}".data(using: String.Encoding.utf8)
-        let session = URLSession.shared
-        let task = session.dataTask(with: request as URLRequest) { data, response, error in
-            if error != nil { // Handle error...
+        
+        let task = URLSession.shared.dataTask(with: request as URLRequest) {data, response, error in
+            if error != nil{
+                print("Error -> \(error)")
                 return
             }
-            let range = Range(uncheckedBounds: (5, data!.count - 5))
-            let newData = data?.subdata(in: range) /* subset response data! */
+            let range = Range(uncheckedBounds: (5, data!.count))
+            let newData = data?.subdata(in: range)
+            print("starts here fb")
             print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
+            do {
+                let result = try JSONSerialization.jsonObject(with: newData!, options: [])
+                print("response: \(JSON(result))")
+                completion(JSON(result))
+                
+            } catch {
+                print("Error: \(error)")
+            }
         }
+        
         task.resume()
     }
     
@@ -94,7 +124,7 @@ class Model {
         task.resume()
     }
     
-    func getMultipleUserLocations() {
+    func getMultipleUserLocations(completion: @escaping ((JSON) -> Void)) {
         
         let request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation?limit=100")!)
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
@@ -104,29 +134,52 @@ class Model {
             if error != nil { // Handle error...
                 return
             }
-            print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+//            let range = Range(uncheckedBounds: (5, data!.count))
+//            let newData = data?.subdata(in: range) /* subset response data! */
+            print("starts here")
+//            print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+            do {
+                let result = try JSONSerialization.jsonObject(with: data!, options: []) as! [String:AnyObject]
+                print("response: \(JSON(result))")
+                completion(JSON(result))
+                
+            } catch {
+                print("Error: \(error)")
+            }
+//            print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
         }
         task.resume()
     }
     
-    func getSingleUserLocation() {
+    func getSingleUserLocation(key: String, completion: @escaping ((JSON) -> Void)) {
         
-        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation?where={'uniqueKey':'1234'}"
+        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation?where=%7B%22uniqueKey%22%3A%22\(key)%22%7D"
         let url = URL(string: urlString)
+        
+        print("url is: \(url) \(urlString)")
+        
         let request = NSMutableURLRequest(url: url!)
-    request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
-    request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
+        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
+        
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
             if error != nil { // Handle error
                 return
             }
-            print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+            do {
+                let result = try JSONSerialization.jsonObject(with: data!, options: []) as! [String:AnyObject]
+                print("response: \(JSON(result))")
+                completion(JSON(result))
+                
+            } catch {
+                print("Error: \(error)")
+            }
         }
         task.resume()
     }
     
-    func postUserLocation(uniqueKey: String, firstName: String, lastName: String, mapString: String, media: String, latitude: Double, longitude: Double) {
+    func postUserLocation(uniqueKey: String, firstName: String, lastName: String, mapString: String, media: String, latitude: Double, longitude: Double, completion: @escaping ((JSON) -> Void)) {
         
         let request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
         request.httpMethod = "POST"
@@ -139,7 +192,14 @@ class Model {
             if error != nil { // Handle error…
                 return
             }
-            print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+            do {
+                let result = try JSONSerialization.jsonObject(with: data!, options: []) as! [String:AnyObject]
+                print("response: \(JSON(result))")
+                completion(JSON(result))
+                
+            } catch {
+                print("Error: \(error)")
+            }
         }
         task.resume()
     }

@@ -9,6 +9,8 @@ target 'OnTheMap' do
   pod 'FacebookCore'
   pod 'FacebookLogin'
   pod 'FacebookShare'
+  pod 'SwiftyJSON'
+  pod 'Parse'
 
   target 'OnTheMapTests' do
     inherit! :search_paths
