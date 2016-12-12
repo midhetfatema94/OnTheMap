@@ -67,6 +67,8 @@ class AddLinkViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    //<-- Code Reference: Swift Development Blog (mhorga.org)
+    
     func forwardGeocoding(address: String) {
         
         CLGeocoder().geocodeAddressString(address, completionHandler: { (placemarks, error) in
@@ -80,15 +82,11 @@ class AddLinkViewController: UIViewController, UITextFieldDelegate {
                 let coordinate = location?.coordinate
                 print("\nlat: \(coordinate!.latitude), long: \(coordinate!.longitude)")
                 self.addPinOnMap(lat: coordinate!.latitude, long: coordinate!.longitude)
-//                if placemark!.areasOfInterest!.count > 0 {
-//                    let areaOfInterest = placemark!.areasOfInterest![0]
-//                    print(areaOfInterest)
-//                } else {
-//                    print("No area of interest found.")
-//                }
             }
         })
     }
+    
+    //Reference complete -->
     
     func addPinOnMap(lat: Double, long: Double) {
         
