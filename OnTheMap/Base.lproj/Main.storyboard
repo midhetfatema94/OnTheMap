@@ -285,7 +285,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="180"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Add a link here" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CPo-D8-yy7">
-                                        <rect key="frame" x="93" y="73.5" width="189" height="33"/>
+                                        <rect key="frame" x="93" y="74" width="189" height="33"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="28"/>
                                         <textInputTraits key="textInputTraits" keyboardType="URL" returnKeyType="done"/>
@@ -326,12 +326,18 @@
                                     <action selector="savePin:" destination="Uzj-4g-E7q" eventType="touchUpInside" id="2Nt-mg-d9d"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="GXS-dN-jbv">
+                                <rect key="frame" x="169" y="315" width="37" height="37"/>
+                                <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="GXS-dN-jbv" firstAttribute="centerY" secondItem="s48-xK-RrT" secondAttribute="centerY" id="0dZ-HR-PlG"/>
                             <constraint firstAttribute="trailing" secondItem="N8y-Ye-Egy" secondAttribute="trailing" id="9Af-EM-H9F"/>
                             <constraint firstItem="9DA-pF-uoo" firstAttribute="top" secondItem="N8y-Ye-Egy" secondAttribute="bottom" id="C5D-cT-8iR"/>
                             <constraint firstItem="N8y-Ye-Egy" firstAttribute="top" secondItem="B5y-4a-jY4" secondAttribute="bottom" id="NSL-wP-OHZ"/>
+                            <constraint firstItem="GXS-dN-jbv" firstAttribute="centerX" secondItem="s48-xK-RrT" secondAttribute="centerX" id="P1w-RX-q6o"/>
                             <constraint firstItem="B5y-4a-jY4" firstAttribute="top" secondItem="s48-xK-RrT" secondAttribute="top" id="ZMS-0j-pci"/>
                             <constraint firstItem="B5y-4a-jY4" firstAttribute="leading" secondItem="s48-xK-RrT" secondAttribute="leading" id="aJO-ht-0XB"/>
                             <constraint firstItem="QUZ-3D-Fac" firstAttribute="centerX" secondItem="s48-xK-RrT" secondAttribute="centerX" id="bxe-bv-68T"/>
@@ -341,6 +347,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="indicator" destination="GXS-dN-jbv" id="IBt-LO-Khy"/>
                         <outlet property="linkTextField" destination="CPo-D8-yy7" id="ndW-UI-2PJ"/>
                         <outlet property="mapView" destination="N8y-Ye-Egy" id="mN1-Vz-9pk"/>
                         <outlet property="submitButton" destination="QUZ-3D-Fac" id="Ljc-Mv-Q8O"/>

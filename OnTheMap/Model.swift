@@ -11,7 +11,7 @@ import SwiftyJSON
 
 class Model {
     
-    func loginUserUdacity(username: String, password: String, completion: @escaping ((JSON) -> Void)) {
+    func loginUserUdacity(username: String, password: String, controller: UIViewController, completion: @escaping ((JSON) -> Void)) {
         
         let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
         request.httpMethod = "POST"
@@ -20,7 +20,11 @@ class Model {
         request.httpBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}".data(using: String.Encoding.utf8)
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
-            if error != nil { // Handle error...
+            
+            if error != nil {
+                
+                print("Error: \(error)")
+                helper.giveErrorAlerts(errorString: "Request failed", errorMessage: error!.localizedDescription, vc: controller)
                 return
             }
             let range = Range(uncheckedBounds: (5, data!.count))
@@ -39,7 +43,7 @@ class Model {
         task.resume()
     }
     
-    func logoutUserUdacity(completion: @escaping ((JSON) -> Void)) {
+    func logoutUserUdacity(controller: UIViewController, completion: @escaping ((JSON) -> Void)) {
         
         let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
         request.httpMethod = "DELETE"
@@ -53,7 +57,11 @@ class Model {
         }
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
+            
             if error != nil {
+                
+                print("Error: \(error)")
+                helper.giveErrorAlerts(errorString: "Request failed", errorMessage: error!.localizedDescription, vc: controller)
                 return
             }
             let range = Range(uncheckedBounds: (5, data!.count))
@@ -71,7 +79,7 @@ class Model {
         
     }
     
-    func loginUserFb(accessToken: String, completion: @escaping ((JSON) -> Void)) {
+    func loginUserFb(accessToken: String, controller: UIViewController, completion: @escaping ((JSON) -> Void)) {
         
         // create post request
         let url = URL(string: "https://www.udacity.com/api/session")!
@@ -85,8 +93,11 @@ class Model {
         request.httpBody = "{\"facebook_mobile\": {\"access_token\": \"\(accessToken)\"}}".data(using: String.Encoding.utf8)
         
         let task = URLSession.shared.dataTask(with: request as URLRequest) {data, response, error in
+            
             if error != nil{
-                print("Error -> \(error)")
+                
+                print("Error: \(error)")
+                helper.giveErrorAlerts(errorString: "Request failed", errorMessage: error!.localizedDescription, vc: controller)
                 return
             }
             let range = Range(uncheckedBounds: (5, data!.count))
@@ -112,7 +123,7 @@ class Model {
         
     }
     
-    func getMultipleUserLocations(sorting: Bool, completion: @escaping ((JSON) -> Void)) {
+    func getMultipleUserLocations(sorting: Bool, controller: UIViewController, completion: @escaping ((JSON) -> Void)) {
         
         var request = NSMutableURLRequest()
         
@@ -129,7 +140,11 @@ class Model {
         request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
+            
             if error != nil { // Handle error...
+                
+                print("Error: \(error)")
+                helper.giveErrorAlerts(errorString: "Request failed", errorMessage: error!.localizedDescription, vc: controller)
                 return
             }
             print("starts here")
@@ -146,7 +161,7 @@ class Model {
         task.resume()
     }
     
-    func getSingleUserLocation(key: String, completion: @escaping ((JSON) -> Void)) {
+    func getSingleUserLocation(key: String, vc: UIViewController, completion: @escaping ((JSON) -> Void)) {
         
         let urlString = "https://parse.udacity.com/parse/classes/StudentLocation?where=%7B%22uniqueKey%22%3A%22\(key)%22%7D"
         let url = URL(string: urlString)
@@ -159,7 +174,11 @@ class Model {
         
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
-            if error != nil { // Handle error
+            
+            if error != nil {
+                
+                print("Error: \(error)")
+                helper.giveErrorAlerts(errorString: "Request failed", errorMessage: error!.localizedDescription, vc: vc)
                 return
             }
             do {
@@ -174,7 +193,7 @@ class Model {
         task.resume()
     }
     
-    func postUserLocation(uniqueKey: String, firstName: String, lastName: String, mapString: String, media: String, latitude: Double, longitude: Double, completion: @escaping ((JSON) -> Void)) {
+    func postUserLocation(uniqueKey: String, firstName: String, lastName: String, mapString: String, media: String, latitude: Double, longitude: Double, controller: UIViewController, completion: @escaping ((JSON) -> Void)) {
         
         let request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
         request.httpMethod = "POST"
@@ -184,7 +203,11 @@ class Model {
         request.httpBody = "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\",\"mapString\": \"\(mapString)\", \"mediaURL\": \"\(media)\",\"latitude\": \(latitude), \"longitude\": \(longitude)}".data(using: String.Encoding.utf8)
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
+            
             if error != nil {
+                
+                print("Error: \(error)")
+                helper.giveErrorAlerts(errorString: "Request failed", errorMessage: error!.localizedDescription, vc: controller)
                 return
             }
             do {
@@ -199,12 +222,16 @@ class Model {
         task.resume()
     }
     
-    func getUserData(uniqueKey: String, completion: @escaping ((JSON) -> Void)) {
+    func getUserData(uniqueKey: String, controller: UIViewController, completion: @escaping ((JSON) -> Void)) {
         
         let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/users/\(uniqueKey)")!)
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
-            if error != nil { // Handle error...
+            
+            if error != nil {
+                
+                print("Error: \(error)")
+                helper.giveErrorAlerts(errorString: "Request failed", errorMessage: error!.localizedDescription, vc: controller)
                 return
             }
             let range = Range(uncheckedBounds: (5, data!.count))

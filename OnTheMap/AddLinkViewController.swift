@@ -19,6 +19,7 @@ class AddLinkViewController: UIViewController, UITextFieldDelegate, MKMapViewDel
     @IBOutlet weak var linkTextField: UITextField!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var submitButton: UIButton!
+    @IBOutlet weak var indicator: UIActivityIndicatorView!
     
     var myLocation = ""
     var myCoordinate = CLLocationCoordinate2D()
@@ -38,7 +39,7 @@ class AddLinkViewController: UIViewController, UITextFieldDelegate, MKMapViewDel
             myLink = linkTextField.text!
         }
         
-        request.postUserLocation(uniqueKey: currentUser["account"]["key"].string!, firstName: user["first_name"].string!, lastName: user["last_name"].string!, mapString: myLocation, media: myLink, latitude: myCoordinate.latitude, longitude: myCoordinate.longitude, completion: {response in
+        request.postUserLocation(uniqueKey: currentUser["account"]["key"].string!, firstName: user["first_name"].string!, lastName: user["last_name"].string!, mapString: myLocation, media: myLink, latitude: myCoordinate.latitude, longitude: myCoordinate.longitude, controller: self, completion: {response in
             
             DispatchQueue.main.async(execute: {
                 
@@ -69,6 +70,7 @@ class AddLinkViewController: UIViewController, UITextFieldDelegate, MKMapViewDel
         linkTextField.attributedPlaceholder = NSAttributedString(string:"Add a link here", attributes:[NSForegroundColorAttributeName: UIColor.white])
         submitButton.layer.cornerRadius = 5
         
+        self.indicator.startAnimating()
         forwardGeocoding(address: myLocation)
         mapView.delegate = self
         linkTextField.delegate = self
@@ -86,30 +88,30 @@ class AddLinkViewController: UIViewController, UITextFieldDelegate, MKMapViewDel
     
     func forwardGeocoding(address: String) {
         
-        loader.showOverlay(self.view)
-        
         CLGeocoder().geocodeAddressString(address, completionHandler: { (placemarks, error) in
+            
             if error != nil {
                 print("geocoding failed: \(error)")
                 helper.giveErrorAlerts(errorString: "Geocoding Failed!", errorMessage: "\(error)", vc: self)
             }
-            if placemarks!.count > 0 {
+            
+            else if placemarks!.count > 0 {
+                
+                print("animation started")
+                
                 let placemark = placemarks?[0]
                 let location = placemark?.location
                 let coordinate = location?.coordinate
-                print("\nlat: \(coordinate!.latitude), long: \(coordinate!.longitude)")
+                print("lat: \(coordinate!.latitude), long: \(coordinate!.longitude)")
                 
                 let latDelta:CLLocationDegrees = 10.0
                 let lonDelta:CLLocationDegrees = 10.0
                 let span = MKCoordinateSpanMake(latDelta, lonDelta)
                 let region = MKCoordinateRegionMake(coordinate!, span)
                 self.mapView.setRegion(region, animated: false)
-                
                 self.addPinOnMap(lat: coordinate!.latitude, long: coordinate!.longitude)
             }
         })
-        
-        loader.hideOverlayView()
     }
     
     //Reference complete -->
@@ -120,6 +122,9 @@ class AddLinkViewController: UIViewController, UITextFieldDelegate, MKMapViewDel
         let newCoordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(exactly: lat)!, longitude: CLLocationDegrees(exactly: long)!)
         newAnnotation.coordinate = newCoordinate
         self.mapView.addAnnotation(newAnnotation)
+        print("animation stopped")
+        self.indicator.stopAnimating()
+        self.indicator.isHidden = true
     }
     
 }

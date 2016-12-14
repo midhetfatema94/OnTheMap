@@ -20,7 +20,7 @@ class StudentLocationTableViewController: UITableViewController {
     
     @IBAction func logout(_ sender: UIBarButtonItem) {
         
-        request.logoutUserUdacity(completion: { response in
+        request.logoutUserUdacity(controller: self, completion: { response in
             
             DispatchQueue.main.async {
                 
@@ -31,7 +31,7 @@ class StudentLocationTableViewController: UITableViewController {
     
     @IBAction func placePin(_ sender: UIBarButtonItem) {
         
-        request.getSingleUserLocation(key: currentUser["account"]["key"].string!, completion: { response in
+        request.getSingleUserLocation(key: currentUser["account"]["key"].string!, vc: self, completion: { response in
             
             DispatchQueue.main.async(execute: {
                 
@@ -56,7 +56,7 @@ class StudentLocationTableViewController: UITableViewController {
     
     func getAllStudentLocations() {
         
-        request.getMultipleUserLocations(sorting: true, completion: {response in
+        request.getMultipleUserLocations(sorting: true, controller: self, completion: {response in
             
             let results = helper.allStudentLocations(response: response, controller: self)
             

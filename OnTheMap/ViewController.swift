@@ -24,7 +24,7 @@ class ViewController: UIViewController, LoginButtonDelegate, UITextFieldDelegate
     
     @IBAction func loginButton(_ sender: UIButton) {
         
-        request.loginUserUdacity(username: emailField.text!, password: passwordField.text!, completion: {response in
+        request.loginUserUdacity(username: emailField.text!, password: passwordField.text!, controller: self, completion: {response in
             
             DispatchQueue.main.async {
                 
@@ -95,7 +95,7 @@ class ViewController: UIViewController, LoginButtonDelegate, UITextFieldDelegate
     
     func getFBDetails(accessToken: AccessToken) {
         
-        request.loginUserFb(accessToken: accessToken.authenticationToken, completion: {response in
+        request.loginUserFb(accessToken: accessToken.authenticationToken, controller: self, completion: {response in
             
             DispatchQueue.main.async {
                 

@@ -18,13 +18,20 @@ class Helper {
         
         var alert = UIAlertController()
         
-        switch response["status"].int! {
-        case 403:
-            alert = UIAlertController(title: "Error!", message: "\(response["error"].string!)", preferredStyle: .alert)
-        case 500:
-            alert = UIAlertController(title: "Error!", message: "Could not connect to the internet", preferredStyle: .alert)
-        default:
-            break
+        if let statusCode = response["status"].int {
+            
+            switch statusCode {
+            case 403:
+                alert = UIAlertController(title: "Error!", message: "\(response["error"].string!)", preferredStyle: .alert)
+            case 500:
+                alert = UIAlertController(title: "Error!", message: "Could not connect to the internet", preferredStyle: .alert)
+            default:
+                break
+            }
+        }
+        else if let responseError = response["error"].string {
+            
+            giveErrorAlerts(errorString: "", errorMessage: responseError, vc: vc)
         }
         
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -107,7 +114,7 @@ class Helper {
             let map = makeVariables(variable: each["mapString"].string)
             let media = makeVariables(variable: each["mediaURL"].string)
             
-            allStudentLocations.append(StudentInformation(firstName: first, lastName: last, key: unique, location: StudentLocation(longitiude: longi, latitude: lati, mapString: map), media: media))
+            allStudentLocations.append(StudentInformation(firstName: first, lastName: last, key: unique, location: StudentLocation(lat: lati, long: longi, map: map), mediaurl: media))
         }
         
         return allStudentLocations

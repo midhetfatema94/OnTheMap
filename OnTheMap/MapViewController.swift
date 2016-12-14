@@ -25,7 +25,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func logout(_ sender: UIBarButtonItem) {
         
-        request.logoutUserUdacity(completion: { response in
+        request.logoutUserUdacity(controller: self, completion: { response in
             
             DispatchQueue.main.async {
                 
@@ -36,7 +36,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func placePin(_ sender: UIBarButtonItem) {
         
-        request.getSingleUserLocation(key: currentUser["account"]["key"].string!, completion: { response in
+        request.getSingleUserLocation(key: currentUser["account"]["key"].string!, vc: self, completion: { response in
             
             DispatchQueue.main.async(execute: {
                 
@@ -65,7 +65,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func getStudentDetails() {
         
-        request.getUserData(uniqueKey: currentUser["account"]["key"].string!, completion: { response in
+        request.getUserData(uniqueKey: currentUser["account"]["key"].string!, controller: self, completion: { response in
             
             if let error = response.error {
                 
@@ -118,7 +118,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func getAllStudentLocations() {
         
-        request.getMultipleUserLocations(sorting: true, completion: {response in
+        request.getMultipleUserLocations(sorting: true, controller: self, completion: {response in
             
             let results = helper.allStudentLocations(response: response, controller: self)
             
