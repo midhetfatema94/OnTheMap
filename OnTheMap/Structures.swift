@@ -10,6 +10,8 @@ import Foundation
 
 struct StudentInformation {
     
+    var firstName: String!
+    var lastName: String!
     var key: String!
     var location: StudentLocation!
     var media: String!

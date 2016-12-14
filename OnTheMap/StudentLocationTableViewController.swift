@@ -11,7 +11,7 @@ import SwiftyJSON
 
 class StudentLocationTableViewController: UITableViewController {
     
-    var results: [JSON] = []
+    var results: [StudentInformation] = []
     
     @IBAction func refresh(_ sender: UIBarButtonItem) {
         
@@ -43,31 +43,31 @@ class StudentLocationTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        getAllStudentLocations()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        if helper.allStudentLocations.count == 0 {
+            
+            getAllStudentLocations()
+        }
+        else {
+            
+            results = helper.allStudentLocations
+        }
     }
     
     func getAllStudentLocations() {
         
         request.getMultipleUserLocations(sorting: true, completion: {response in
             
-            DispatchQueue.main.async(execute: {
+            let results = helper.allStudentLocations(response: response, controller: self)
+            
+            if results.0 {
                 
-                if let error = response.error {
-                    
-                    print("Error creating request: \(error.localizedDescription)")
-                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: self)
-                }
-                else if response["results"] != JSON.null {
-                    
-                    self.results = response["results"].array!
-                    self.tableView.reloadData()
-                }
-                else {
-                    
-                    print("Response error!")
-                    helper.giveErrorAlerts(response: response, vc: self)
-                }
-            })
+                self.results = results.array
+                self.tableView.reloadData()
+            }
         })
     }
 
@@ -85,13 +85,13 @@ class StudentLocationTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "studentLocationCell", for: indexPath) as! StudentLocationDetailTableViewCell
-        cell.studentName.text = "\(results[indexPath.row]["firstName"].string!) \(results[indexPath.row]["lastName"].string!)"
+        cell.studentName.text = "\(results[indexPath.row].firstName!) \(results[indexPath.row].lastName!)"
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if let urlToOpen = URL(string: results[indexPath.row]["mediaURL"].string!) {
+        if let urlToOpen = URL(string: results[indexPath.row].media) {
             UIApplication.shared.open(urlToOpen, options: [:], completionHandler: nil)
         }
     }

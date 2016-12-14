@@ -370,7 +370,7 @@
         <!--On The Map-->
         <scene sceneID="Unb-qr-FHH">
             <objects>
-                <tabBarController storyboardIdentifier="tabBar" id="8dS-ff-eux" customClass="TabViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="tabBar" id="8dS-ff-eux" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" title="On The Map" id="V0f-As-IEM">
                         <barButtonItem key="leftBarButtonItem" title="Logout" id="Z3G-HI-68y"/>
                         <rightBarButtonItems>

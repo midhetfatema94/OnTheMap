@@ -51,8 +51,16 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         mapView.delegate = self
         userUniqueId = currentUser["account"]["key"].string!
-        getAllStudentLocations()
+            
         getStudentDetails()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        if helper.allStudentLocations.count == 0 {
+            
+            getAllStudentLocations()
+        }
     }
     
     func getStudentDetails() {
@@ -110,48 +118,53 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func getAllStudentLocations() {
         
-        var results: [JSON] = []
-        
-        request.getMultipleUserLocations(sorting: false, completion: {response in
+        request.getMultipleUserLocations(sorting: true, completion: {response in
+            
+            let results = helper.allStudentLocations(response: response, controller: self)
+            
+            if results.0 {
                 
-            DispatchQueue.main.async(execute: {
-                
-                if let error = response.error {
-                    
-                    print("Error creating request: \(error.localizedDescription)")
-                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: self)
-                }
-                else if response["results"] != JSON.null {
-                    
-                    results = response["results"].array!
-                    self.getPins(results: results)
-                    
-                }
-                else {
-                    
-                    print("Response error!")
-                    helper.giveErrorAlerts(response: response, vc: self)
-                }
-            })
+                self.getPins(results: results.1)
+            }
+            
+//            DispatchQueue.main.async(execute: {
+//                
+//                if let error = response.error {
+//                    
+//                    print("Error creating request: \(error.localizedDescription)")
+//                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: self)
+//                }
+//                else if response["results"] != JSON.null {
+//                    
+//                    let results = helper.studentLocationJSONToStruct(response: response["results"].array!)
+//                    
+//                    
+//                }
+//                else {
+//                    
+//                    print("Response error!")
+//                    helper.giveErrorAlerts(response: response, vc: self)
+//                }
+//            })
         })
     }
     
-    var locations: [JSON] = []
-    var allStudentInfo: [StudentInformation] = []
+//    var locations: [JSON] = []
+//     allStudentInfo: [StudentInformation] = []
     
-    func getPins(results: [JSON]) {
+    func getPins(results: [StudentInformation]) {
         
-        locations = results
+        let allStudentInfo = results
         
 //        print("locations: \(locations)")
         
-        for dictionary in locations {
+        for dictionary in allStudentInfo {
             
             // Notice that the float values are being used to create CLLocationDegree values.
             // This is a version of the Double type.
-            let lat = CLLocationDegrees(Double(dictionary["latitude"].int!))
+            let lat = CLLocationDegrees(Double(dictionary.location.latitude))
 //            print("lat: \(lat)")
-            let long = CLLocationDegrees(Double(dictionary["longitude"].int!))
+            let long = CLLocationDegrees(Double(dictionary.location.longitiude))
 //            print("long: \(long)")
             
             // The lat and long are used to create a CLLocationCoordinates2D instance.
@@ -159,23 +172,23 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             
             var first = ""
             
-            if dictionary["firstName"].string != nil && dictionary["firstName"] != "" {
-                first = dictionary["firstName"].string!
+            if dictionary.firstName != nil && dictionary.firstName != "" {
+                first = dictionary.firstName
             }
             
             var last = ""
             
-            if dictionary["lastName"].string != nil && dictionary["lastName"] != "" {
-                last = dictionary["lastName"].string!
+            if dictionary.lastName != nil && dictionary.lastName != "" {
+                last = dictionary.lastName
             }
             
             var mediaURL = ""
             
-            if dictionary["mediaURL"].string != nil && dictionary["mediaURL"] != "" {
-                mediaURL = dictionary["mediaURL"].string!
+            if dictionary.media != nil && dictionary.media != "" {
+                mediaURL = dictionary.media
             }
             
-//            allStudentInfo.append(StudentInformation(firstName: first, lastName: last, key: dictionary["uniqueKey"].string!, location: StudentLocation(longitiude: long, latitude: lat, mapString: dictionary["mapString"].string!), media: mediaURL))
+            print("creating annotations \(lat) \(long)")
             
             // Here we create the annotation and set its coordiate, title, and subtitle properties
             let annotation = MKPointAnnotation()

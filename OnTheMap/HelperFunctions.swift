@@ -12,6 +12,8 @@ import SwiftyJSON
 
 class Helper {
     
+    var allStudentLocations: [StudentInformation] = []
+    
     func giveErrorAlerts(response: JSON, vc: UIViewController) {
         
         var alert = UIAlertController()
@@ -90,19 +92,82 @@ class Helper {
         vc.navigationController!.present(setLocVC, animated: true, completion: nil)
     }
     
-    var allStudentLocations: [StudentInformation] = []
-    
-    func studentLocationJSONToStruct(response: [JSON]) {
+    func studentLocationJSONToStruct(response: [JSON]) -> [StudentInformation] {
         
         allStudentLocations = []
         
         for each in response {
             
-            allStudentLocations.append(StudentInformation(firstName: each["firstName"].string!, lastName: each["lastName"].string!, key: each["uniqueKey"].string!, location: each["firstName"].string!, media: each["firstName"].string!))
             
+            let first = makeVariables(variable: each["firstName"].string)
+            let last = makeVariables(variable: each["lastName"].string)
+            let unique = makeVariables(variable: each["uniqueKey"].string)
+            let lati = makeVariables(variable: each["latitude"].double)
+            let longi = makeVariables(variable: each["longitude"].double)
+            let map = makeVariables(variable: each["mapString"].string)
+            let media = makeVariables(variable: each["mediaURL"].string)
             
+            allStudentLocations.append(StudentInformation(firstName: first, lastName: last, key: unique, location: StudentLocation(longitiude: longi, latitude: lati, mapString: map), media: media))
         }
         
+        return allStudentLocations
+    }
+    
+    func makeVariables(variable: String?) -> String {
+        
+        let varChar = ""
+        
+        if variable != nil {
+            
+            return variable!
+        }
+        
+        return varChar
+    }
+    
+    func makeVariables(variable: Double?) -> Double {
+        
+        let varChar = 0.0
+        
+        print("double variable: \(variable)")
+        
+        if variable != nil {
+            
+            return Double(variable!)
+        }
+        
+        return varChar
+    }
+    
+    func allStudentLocations(response: JSON, controller: UIViewController) -> (flag: Bool, array: [StudentInformation]) {
+        
+//        var flag: Bool!
+        
+//        request.getMultipleUserLocations(sorting: false, completion: {response in
+//            
+//            DispatchQueue.main.async(execute: {
+        
+                if let error = response.error {
+                    
+                    print("Error creating request: \(error.localizedDescription)")
+                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: controller)
+                    return (false, [])
+                }
+                else if response["results"] != JSON.null {
+                    
+                    let results = helper.studentLocationJSONToStruct(response: response["results"].array!)
+                    return (true, results)
+                }
+                else {
+                    
+                    print("Response error!")
+                    helper.giveErrorAlerts(response: response, vc: controller)
+                    return (false, [])
+                }
+//            })
+//        })
+        
+//        return flag
     }
     
 }
