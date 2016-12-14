@@ -43,10 +43,6 @@ class StudentLocationTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        
         if helper.allStudentLocations.count == 0 {
             
             getAllStudentLocations()
@@ -55,6 +51,7 @@ class StudentLocationTableViewController: UITableViewController {
             
             results = helper.allStudentLocations
         }
+        
     }
     
     func getAllStudentLocations() {

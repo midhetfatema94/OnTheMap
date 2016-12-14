@@ -71,6 +71,7 @@ class ViewController: UIViewController, LoginButtonDelegate, UITextFieldDelegate
         emailField.delegate = self
         passwordField.delegate = self
         
+        loginManager.logOut()
     }
     
     func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
