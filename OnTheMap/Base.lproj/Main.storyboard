@@ -58,14 +58,14 @@
                                         </constraints>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="done"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ypz-zN-yYt">
                                         <rect key="frame" x="0.0" y="60" width="299" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.69999999999999996" colorSpace="calibratedRGB"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES" secureTextEntry="YES"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fHQ-Qz-SV3">
                                         <rect key="frame" x="0.0" y="120" width="299" height="50"/>
@@ -181,7 +181,7 @@
                                         <rect key="frame" x="37" y="74" width="302" height="33"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="28"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                     </textField>
                                 </subviews>
                                 <color key="backgroundColor" red="0.13989955357142858" green="0.28228621057142861" blue="0.46783693007142862" alpha="1" colorSpace="calibratedRGB"/>
@@ -288,7 +288,7 @@
                                         <rect key="frame" x="93" y="73.5" width="189" height="33"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="28"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="URL" returnKeyType="done"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fx9-nk-b85">
                                         <rect key="frame" x="319" y="8" width="48" height="30"/>
