@@ -112,24 +112,19 @@ class Model {
         
     }
     
-    func getUserData() {
+    func getMultipleUserLocations(sorting: Bool, completion: @escaping ((JSON) -> Void)) {
         
-        let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/users/3903878747")!)
-        let session = URLSession.shared
-        let task = session.dataTask(with: request as URLRequest) { data, response, error in
-            if error != nil { // Handle error...
-                return
-            }
-            let range = Range(uncheckedBounds: (5, data!.count - 5))
-            let newData = data?.subdata(in: range) /* subset response data! */
-            print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
+        var request = NSMutableURLRequest()
+        
+        if sorting {
+            
+            request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation?limit=100&order=-updatedAt")!)
         }
-        task.resume()
-    }
-    
-    func getMultipleUserLocations(completion: @escaping ((JSON) -> Void)) {
+        else {
+            
+            request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation?limit=100")!)
+        }
         
-        let request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation?limit=100")!)
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
         let session = URLSession.shared
@@ -194,6 +189,28 @@ class Model {
             }
             do {
                 let result = try JSONSerialization.jsonObject(with: data!, options: []) as! [String:AnyObject]
+                print("response: \(JSON(result))")
+                completion(JSON(result))
+                
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+        task.resume()
+    }
+    
+    func getUserData(uniqueKey: String, completion: @escaping ((JSON) -> Void)) {
+        
+        let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/users/\(uniqueKey)")!)
+        let session = URLSession.shared
+        let task = session.dataTask(with: request as URLRequest) { data, response, error in
+            if error != nil { // Handle error...
+                return
+            }
+            let range = Range(uncheckedBounds: (5, data!.count))
+            let newData = data?.subdata(in: range) /* subset response data! */
+            do {
+                let result = try JSONSerialization.jsonObject(with: newData!, options: []) as! [String:AnyObject]
                 print("response: \(JSON(result))")
                 completion(JSON(result))
                 

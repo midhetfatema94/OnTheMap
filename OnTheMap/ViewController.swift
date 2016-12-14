@@ -12,9 +12,7 @@ import FacebookCore
 import FacebookShare
 import SwiftyJSON
 
-let request = Model()
-
-class ViewController: UIViewController, LoginButtonDelegate {
+class ViewController: UIViewController, LoginButtonDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var signUpStack: UIStackView!
     @IBOutlet weak var emailField: UITextField!
@@ -30,9 +28,16 @@ class ViewController: UIViewController, LoginButtonDelegate {
             
             DispatchQueue.main.async {
                 
-                if response.error != nil {
+                if let error = response.error {
                     
                     print("response error: \(response.error?.localizedDescription)")
+                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: self)
+                }
+                else if response["status"] != JSON.null {
+                    
+                    print("response error!")
+                    helper.giveErrorAlerts(response: response, vc: self)
+                    
                 }
                 else if response != JSON.null {
                     
@@ -41,10 +46,6 @@ class ViewController: UIViewController, LoginButtonDelegate {
                         print("pushing map vc")
                         self.goToMap(response: response)
                     })
-                }
-                else {
-                    
-                    print("response error!")
                 }
             }
         })
@@ -56,6 +57,8 @@ class ViewController: UIViewController, LoginButtonDelegate {
         
         self.navigationController!.setNavigationBarHidden(true, animated: false)
         
+        mainNav = self.navigationController!
+        
         loginButton = LoginButton(readPermissions: [.publicProfile])
         signUpStack.addArrangedSubview(loginButton)
         
@@ -65,6 +68,9 @@ class ViewController: UIViewController, LoginButtonDelegate {
         }
         
         loginButton.delegate = self
+        emailField.delegate = self
+        passwordField.delegate = self
+        
     }
     
     func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
@@ -75,8 +81,9 @@ class ViewController: UIViewController, LoginButtonDelegate {
             break
         case .failed(let error):
             print("login failed: \(error)")
+            helper.giveErrorAlerts(errorString: "Login Failed!", errorMessage: error.localizedDescription, vc: self)
             break
-        case .success(grantedPermissions: let grantedPersmissions, declinedPermissions: let declinedPermission, token: let accesstoken):
+        case .success(grantedPermissions: _, declinedPermissions: _, token: let accesstoken):
             print("login successful!")
             getFBDetails(accessToken: accesstoken)
             break
@@ -91,9 +98,10 @@ class ViewController: UIViewController, LoginButtonDelegate {
             
             DispatchQueue.main.async {
                 
-                if response.error != nil {
+                if let error = response.error {
                     
                     print("response error: \(response.error?.localizedDescription)")
+                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: self)
                 }
                 else if response["session"] != JSON.null {
                     
@@ -105,6 +113,7 @@ class ViewController: UIViewController, LoginButtonDelegate {
                 else {
                     
                     print("response error!")
+                    helper.giveErrorAlerts(response: response, vc: self)
                 }
             }
         })
@@ -120,6 +129,13 @@ class ViewController: UIViewController, LoginButtonDelegate {
         currentUser = response
         let tabVC = self.storyboard!.instantiateViewController(withIdentifier: "tabBar")
         self.navigationController!.pushViewController(tabVC, animated: true)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        emailField.resignFirstResponder()
+        passwordField.resignFirstResponder()
+        return true
     }
 }
 

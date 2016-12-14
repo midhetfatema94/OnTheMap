@@ -13,6 +13,33 @@ class StudentLocationTableViewController: UITableViewController {
     
     var results: [JSON] = []
     
+    @IBAction func refresh(_ sender: UIBarButtonItem) {
+        
+        getAllStudentLocations()
+    }
+    
+    @IBAction func logout(_ sender: UIBarButtonItem) {
+        
+        request.logoutUserUdacity(completion: { response in
+            
+            DispatchQueue.main.async {
+                
+                helper.logout(response: response, viewController: self)
+            }
+        })
+    }
+    
+    @IBAction func placePin(_ sender: UIBarButtonItem) {
+        
+        request.getSingleUserLocation(key: currentUser["account"]["key"].string!, completion: { response in
+            
+            DispatchQueue.main.async(execute: {
+                
+                helper.postPin(response: response, viewController: self)
+            })
+        })
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -21,13 +48,14 @@ class StudentLocationTableViewController: UITableViewController {
     
     func getAllStudentLocations() {
         
-        request.getMultipleUserLocations(completion: {response in
+        request.getMultipleUserLocations(sorting: true, completion: {response in
             
             DispatchQueue.main.async(execute: {
                 
                 if let error = response.error {
                     
                     print("Error creating request: \(error.localizedDescription)")
+                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: self)
                 }
                 else if response["results"] != JSON.null {
                     
@@ -37,6 +65,7 @@ class StudentLocationTableViewController: UITableViewController {
                 else {
                     
                     print("Response error!")
+                    helper.giveErrorAlerts(response: response, vc: self)
                 }
             })
         })

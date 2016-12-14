@@ -14,6 +14,10 @@
 		BBF54F641DFD7EF90016A1FA /* AddLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF54F631DFD7EF90016A1FA /* AddLinkViewController.swift */; };
 		BBF54F681DFE4F350016A1FA /* StudentLocationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF54F671DFE4F350016A1FA /* StudentLocationTableViewController.swift */; };
 		BBF54F6A1DFE4F680016A1FA /* StudentLocationDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF54F691DFE4F680016A1FA /* StudentLocationDetailTableViewCell.swift */; };
+		BBF54F6C1DFF13AC0016A1FA /* Structures.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF54F6B1DFF13AC0016A1FA /* Structures.swift */; };
+		BBF54F6E1DFFA0270016A1FA /* LoadingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF54F6D1DFFA0270016A1FA /* LoadingOverlay.swift */; };
+		BBF54F701E010AFA0016A1FA /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF54F6F1E010AFA0016A1FA /* TabViewController.swift */; };
+		BBF54F721E01232E0016A1FA /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF54F711E01232E0016A1FA /* HelperFunctions.swift */; };
 		BBF8E1431DEC9BF200BE1DBB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF8E1421DEC9BF200BE1DBB /* AppDelegate.swift */; };
 		BBF8E1451DEC9BF300BE1DBB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF8E1441DEC9BF300BE1DBB /* ViewController.swift */; };
 		BBF8E1481DEC9BF300BE1DBB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BBF8E1461DEC9BF300BE1DBB /* Main.storyboard */; };
@@ -58,6 +62,10 @@
 		BBF54F631DFD7EF90016A1FA /* AddLinkViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddLinkViewController.swift; sourceTree = "<group>"; };
 		BBF54F671DFE4F350016A1FA /* StudentLocationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentLocationTableViewController.swift; sourceTree = "<group>"; };
 		BBF54F691DFE4F680016A1FA /* StudentLocationDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentLocationDetailTableViewCell.swift; sourceTree = "<group>"; };
+		BBF54F6B1DFF13AC0016A1FA /* Structures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Structures.swift; sourceTree = "<group>"; };
+		BBF54F6D1DFFA0270016A1FA /* LoadingOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingOverlay.swift; sourceTree = "<group>"; };
+		BBF54F6F1E010AFA0016A1FA /* TabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
+		BBF54F711E01232E0016A1FA /* HelperFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelperFunctions.swift; sourceTree = "<group>"; };
 		BBF8E13F1DEC9BF200BE1DBB /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBF8E1421DEC9BF200BE1DBB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BBF8E1441DEC9BF300BE1DBB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -144,9 +152,13 @@
 				BBF8E1711DEF2E0F00BE1DBB /* Fonts */,
 				BBF8E1421DEC9BF200BE1DBB /* AppDelegate.swift */,
 				BBF8E1441DEC9BF300BE1DBB /* ViewController.swift */,
+				BBF54F6B1DFF13AC0016A1FA /* Structures.swift */,
 				BBF8E1461DEC9BF300BE1DBB /* Main.storyboard */,
+				BBF54F6F1E010AFA0016A1FA /* TabViewController.swift */,
+				BBF54F6D1DFFA0270016A1FA /* LoadingOverlay.swift */,
 				BBF54F691DFE4F680016A1FA /* StudentLocationDetailTableViewCell.swift */,
 				BBF54F671DFE4F350016A1FA /* StudentLocationTableViewController.swift */,
+				BBF54F711E01232E0016A1FA /* HelperFunctions.swift */,
 				BBF54F611DFD65830016A1FA /* SetLocationViewController.swift */,
 				BBF54F631DFD7EF90016A1FA /* AddLinkViewController.swift */,
 				BBF54F5E1DF6697E0016A1FA /* MapViewController.swift */,
@@ -489,9 +501,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				BBF54F641DFD7EF90016A1FA /* AddLinkViewController.swift in Sources */,
+				BBF54F6C1DFF13AC0016A1FA /* Structures.swift in Sources */,
 				BBF54F6A1DFE4F680016A1FA /* StudentLocationDetailTableViewCell.swift in Sources */,
+				BBF54F6E1DFFA0270016A1FA /* LoadingOverlay.swift in Sources */,
 				BBF54F621DFD65830016A1FA /* SetLocationViewController.swift in Sources */,
+				BBF54F721E01232E0016A1FA /* HelperFunctions.swift in Sources */,
 				BBF8E17F1DF0915100BE1DBB /* Model.swift in Sources */,
+				BBF54F701E010AFA0016A1FA /* TabViewController.swift in Sources */,
 				BBF54F681DFE4F350016A1FA /* StudentLocationTableViewController.swift in Sources */,
 				BBF8E1451DEC9BF300BE1DBB /* ViewController.swift in Sources */,
 				BBF8E1431DEC9BF200BE1DBB /* AppDelegate.swift in Sources */,

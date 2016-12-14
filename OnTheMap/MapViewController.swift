@@ -19,7 +19,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func refresh(_ sender: UIBarButtonItem) {
         
-        self.mapView.removeAnnotations(annotations)
+        mapView.removeAnnotations(annotations)
         getAllStudentLocations()
     }
     
@@ -29,25 +29,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             
             DispatchQueue.main.async {
                 
-                if let error = response.error {
-                    
-                    print("error creating request: \(error.localizedDescription)")
-                }
-                else if response != JSON.null {
-                    
-                    let allvcs = self.navigationController!.viewControllers
-                    
-                    for eachVC in allvcs {
-                        
-                        if eachVC.isKind(of: ViewController.self) {
-                            
-                            let vc = eachVC as! ViewController
-                            vc.loginManager.logOut()
-                        }
-                    }
-                    
-                    self.navigationController!.popToRootViewController(animated: true)
-                }
+                helper.logout(response: response, viewController: self)
             }
         })
     }
@@ -58,27 +40,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             
             DispatchQueue.main.async(execute: {
                 
-                if let error = response.error {
-                    
-                    print("Error creating a request: \(error.localizedDescription)")
-                    
-                }
-                else if response["results"].array!.count > 0 {
-                        
-                    let alert = UIAlertController(title: nil, message: "You have already posted a student location. Would you like to overwrite your current location?", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Overwrite", style: .default, handler: {_ in
-                        self.postStudentLocation()
-                    }))
-                    alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                }
-                else {
-                    
-                    self.postStudentLocation()
-                }
+                helper.postPin(response: response, viewController: self)
             })
         })
     }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -86,12 +52,28 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         mapView.delegate = self
         userUniqueId = currentUser["account"]["key"].string!
         getAllStudentLocations()
+        getStudentDetails()
     }
     
-    func postStudentLocation() {
+    func getStudentDetails() {
         
-        let setLocVC = self.storyboard?.instantiateViewController(withIdentifier: "setLocationVC")
-        self.navigationController!.present(setLocVC!, animated: true, completion: nil)
+        request.getUserData(uniqueKey: currentUser["account"]["key"].string!, completion: { response in
+            
+            if let error = response.error {
+                
+                helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: self)
+            }
+            else if response["status"].string != nil {
+                
+                helper.giveErrorAlerts(response: response, vc: self)
+            }
+            else if response != JSON.null {
+                
+                print("response arrived student details")
+                user = response["user"]
+            }
+        })
+        
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -130,13 +112,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         var results: [JSON] = []
         
-        request.getMultipleUserLocations(completion: {response in
+        request.getMultipleUserLocations(sorting: false, completion: {response in
                 
             DispatchQueue.main.async(execute: {
                 
                 if let error = response.error {
                     
                     print("Error creating request: \(error.localizedDescription)")
+                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: self)
                 }
                 else if response["results"] != JSON.null {
                     
@@ -147,12 +130,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 else {
                     
                     print("Response error!")
+                    helper.giveErrorAlerts(response: response, vc: self)
                 }
             })
         })
     }
     
     var locations: [JSON] = []
+    var allStudentInfo: [StudentInformation] = []
     
     func getPins(results: [JSON]) {
         
@@ -190,6 +175,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 mediaURL = dictionary["mediaURL"].string!
             }
             
+//            allStudentInfo.append(StudentInformation(firstName: first, lastName: last, key: dictionary["uniqueKey"].string!, location: StudentLocation(longitiude: long, latitude: lat, mapString: dictionary["mapString"].string!), media: mediaURL))
             
             // Here we create the annotation and set its coordiate, title, and subtitle properties
             let annotation = MKPointAnnotation()

@@ -14,6 +14,10 @@ import Bolts
 import SwiftyJSON
 
 var currentUser: JSON!
+var mainNav: UINavigationController!
+let request = Model()
+let helper = Helper()
+var user: JSON!
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

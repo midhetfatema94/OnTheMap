@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SetLocationViewController: UIViewController {
+class SetLocationViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var findButton: UIButton!
     @IBOutlet weak var locationTextField: UITextField!
@@ -31,17 +31,23 @@ class SetLocationViewController: UIViewController {
         findButton.layer.cornerRadius = 5
         
         locationTextField.attributedPlaceholder = NSAttributedString(string:"Enter Your Location Here", attributes:[NSForegroundColorAttributeName: UIColor.white])
+        locationTextField.delegate = self
         
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         
         if isDismissed {
             
+            print("in set location again")
             self.dismiss(animated: true, completion: nil)
-            
         }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
+        locationTextField.resignFirstResponder()
+        return true
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -49,7 +55,6 @@ class SetLocationViewController: UIViewController {
         if segue.identifier == "addLinkSegue" {
             
             let findLocVC = segue.destination as! AddLinkViewController
-            
             if locationTextField.text != "" && locationTextField.text != "Add Your Location Here" {
                 findLocVC.myLocation = locationTextField.text!
             }
