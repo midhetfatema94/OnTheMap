@@ -120,43 +120,21 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         request.getMultipleUserLocations(sorting: true, controller: self, completion: {response in
             
-            let results = helper.allStudentLocations(response: response, controller: self)
-            
-            if results.0 {
+            DispatchQueue.main.async {
                 
-                self.getPins(results: results.1)
+                let results = helper.allStudentLocations(response: response, controller: self)
+                
+                if results.0 {
+                    
+                    self.getPins(results: results.1)
+                }
             }
-            
-//            DispatchQueue.main.async(execute: {
-//                
-//                if let error = response.error {
-//                    
-//                    print("Error creating request: \(error.localizedDescription)")
-//                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: self)
-//                }
-//                else if response["results"] != JSON.null {
-//                    
-//                    let results = helper.studentLocationJSONToStruct(response: response["results"].array!)
-//                    
-//                    
-//                }
-//                else {
-//                    
-//                    print("Response error!")
-//                    helper.giveErrorAlerts(response: response, vc: self)
-//                }
-//            })
         })
     }
-    
-//    var locations: [JSON] = []
-//     allStudentInfo: [StudentInformation] = []
     
     func getPins(results: [StudentInformation]) {
         
         let allStudentInfo = results
-        
-//        print("locations: \(locations)")
         
         for dictionary in allStudentInfo {
             
