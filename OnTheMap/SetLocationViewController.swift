@@ -41,6 +41,7 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate {
             
             print("in set location again")
             self.dismiss(animated: true, completion: nil)
+            isDismissed = false
         }
     }
     

@@ -92,7 +92,7 @@ class AddLinkViewController: UIViewController, UITextFieldDelegate, MKMapViewDel
             
             if error != nil {
                 print("geocoding failed: \(error)")
-                helper.giveErrorAlerts(errorString: "Geocoding Failed!", errorMessage: "\(error)", vc: self)
+                helper.giveErrorAlerts(errorString: "", errorMessage: "Geocoding Failed", vc: self)
             }
             
             else if placemarks!.count > 0 {
