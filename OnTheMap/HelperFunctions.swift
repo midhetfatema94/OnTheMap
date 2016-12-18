@@ -16,26 +16,16 @@ class Helper {
     
     func giveErrorAlerts(response: JSON, vc: UIViewController) {
         
-        var alert = UIAlertController()
+//        var alert = UIAlertController(title: "Error!", message: "\(response["error"].string!)", preferredStyle: .alert)
         
-        if let statusCode = response["status"].int {
+        if let responseError = response["error"].string {
             
-            switch statusCode {
-            case 403:
-                alert = UIAlertController(title: "Error!", message: "\(response["error"].string!)", preferredStyle: .alert)
-            case 500:
-                alert = UIAlertController(title: "Error!", message: "Could not connect to the internet", preferredStyle: .alert)
-            default:
-                break
-            }
-        }
-        else if let responseError = response["error"].string {
-            
-            giveErrorAlerts(errorString: "", errorMessage: responseError, vc: vc)
+            let errorSplit = responseError.components(separatedBy: ":")
+            giveErrorAlerts(errorString: "", errorMessage: errorSplit.last!, vc: vc)
         }
         
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        vc.present(alert, animated: true, completion: nil)
+//        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//        vc.present(alert, animated: true, completion: nil)
     }
     
     func giveErrorAlerts(errorString: String, errorMessage: String, vc: UIViewController) {
@@ -114,7 +104,9 @@ class Helper {
             let map = makeVariables(variable: each["mapString"].string)
             let media = makeVariables(variable: each["mediaURL"].string)
             
-            allStudentLocations.append(StudentInformation(firstName: first, lastName: last, key: unique, location: StudentLocation(lat: lati, long: longi, map: map), mediaurl: media))
+            let info: [String : Any] = ["firstName": first, "lastName": last, "key": unique, "location": StudentLocation(lat: lati, long: longi, map: map), "mediaurl": media]
+            
+            allStudentLocations.append(StudentInformation(studentInfo: info))
         }
         
         return allStudentLocations
@@ -148,33 +140,22 @@ class Helper {
     
     func allStudentLocations(response: JSON, controller: UIViewController) -> (flag: Bool, array: [StudentInformation]) {
         
-//        var flag: Bool!
-        
-//        request.getMultipleUserLocations(sorting: false, completion: {response in
-//            
-//            DispatchQueue.main.async(execute: {
-        
-                if let error = response.error {
-                    
-                    print("Error creating request: \(error.localizedDescription)")
-                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: controller)
-                    return (false, [])
-                }
-                else if response["results"] != JSON.null {
-                    
-                    let results = helper.studentLocationJSONToStruct(response: response["results"].array!)
-                    return (true, results)
-                }
-                else {
-                    
-                    print("Response error!")
-                    helper.giveErrorAlerts(response: response, vc: controller)
-                    return (false, [])
-                }
-//            })
-//        })
-        
-//        return flag
-    }
-    
+        if let error = response.error {
+            
+            print("Error creating request: \(error.localizedDescription)")
+            helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: controller)
+            return (false, [])
+        }
+        else if response["results"] != JSON.null {
+            
+            let results = helper.studentLocationJSONToStruct(response: response["results"].array!)
+            return (true, results)
+        }
+        else {
+            
+            print("Response error!")
+            helper.giveErrorAlerts(response: response, vc: controller)
+            return (false, [])
+        }
+    }    
 }

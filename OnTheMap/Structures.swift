@@ -16,13 +16,13 @@ struct StudentInformation {
     var location: StudentLocation!
     var media: String!
     
-    init(firstName: String, lastName: String, key: String, location: StudentLocation, mediaurl: String) {
+    init(studentInfo: Dictionary<String, Any>) {
         
-        self.firstName = firstName
-        self.lastName = lastName
-        self.key = key
-        self.location = location
-        self.media = mediaurl
+        self.firstName = studentInfo["firstName"] as! String!
+        self.lastName = studentInfo["lastName"] as! String!
+        self.key = studentInfo["key"] as! String!
+        self.location = studentInfo["location"] as! StudentLocation!
+        self.media = studentInfo["mediaurl"] as! String!
     }
 }
 
