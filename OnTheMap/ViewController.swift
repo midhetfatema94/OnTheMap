@@ -27,16 +27,16 @@ class ViewController: UIViewController, LoginButtonDelegate, UITextFieldDelegate
             
             DispatchQueue.main.async {
                 
-                if let error = response["error"] as? String {
-                    
-                    print("response error: \(error)")
-                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error, vc: self)
-                }
-                else if response["status"] != nil {
+                if response["status"] != nil {
                     
                     print("response error!")
                     helper.giveErrorAlerts(response: response, vc: self)
                     
+                }
+                else if let error = response["error"] as? String {
+                    
+                    print("response error: \(error)")
+                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error, vc: self)
                 }
                 else if response != nil {
                     
