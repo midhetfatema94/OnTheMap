@@ -39,16 +39,18 @@ class AddLinkViewController: UIViewController, UITextFieldDelegate, MKMapViewDel
             myLink = linkTextField.text!
         }
         
-        request.postUserLocation(uniqueKey: currentUser["account"]["key"].string!, firstName: user["first_name"].string!, lastName: user["last_name"].string!, mapString: myLocation, media: myLink, latitude: myCoordinate.latitude, longitude: myCoordinate.longitude, controller: self, completion: {response in
+        let userAccount = currentUser["account"] as! [String: Any]
+        
+        request.postUserLocation(uniqueKey: userAccount["key"] as! String, firstName: user["first_name"] as! String, lastName: user["last_name"] as! String, mapString: myLocation, media: myLink, latitude: myCoordinate.latitude, longitude: myCoordinate.longitude, controller: self, completion: {response in
             
             DispatchQueue.main.async(execute: {
                 
-                if let error = response.error {
+                if let error = response["error"] {
                     
-                    print("Error creating request: \(error.localizedDescription)")
-                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: self)
+                    print("Error creating request: \(error)")
+//                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: self)
                 }
-                else if response["createdAt"] != JSON.null {
+                else if response["createdAt"] != nil {
                     
                     print("response arrived: \(response)")
                     print("nav controller: \(self.navigationController)")

@@ -11,13 +11,12 @@ import FacebookCore
 import FBSDKLoginKit
 import Parse
 import Bolts
-import SwiftyJSON
 
-var currentUser: JSON!
+var currentUser: [String: Any]!
 var mainNav: UINavigationController!
 let request = Model()
 let helper = Helper()
-var user: JSON!
+var user: [String: Any]!
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

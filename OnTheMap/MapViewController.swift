@@ -8,7 +8,6 @@
 
 import UIKit
 import MapKit
-import SwiftyJSON
 
 class MapViewController: UIViewController, MKMapViewDelegate {
 
@@ -36,7 +35,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func placePin(_ sender: UIBarButtonItem) {
         
-        request.getSingleUserLocation(key: currentUser["account"]["key"].string!, vc: self, completion: { response in
+        let userAccount = currentUser["account"] as! [String: Any]
+        
+        request.getSingleUserLocation(key: userAccount["key"] as! String, vc: self, completion: { response in
             
             DispatchQueue.main.async(execute: {
                 
@@ -50,7 +51,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         super.viewDidLoad()
         
         mapView.delegate = self
-        userUniqueId = currentUser["account"]["key"].string!
+        let userAccount = currentUser["account"] as! [String: Any]
+        userUniqueId = userAccount["key"] as! String
             
         getStudentDetails()
     }
@@ -65,20 +67,22 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func getStudentDetails() {
         
-        request.getUserData(uniqueKey: currentUser["account"]["key"].string!, controller: self, completion: { response in
+        let userAccount = currentUser["account"] as! [String: Any]
+        
+        request.getUserData(uniqueKey: userAccount["key"] as! String, controller: self, completion: { response in
             
-            if let error = response.error {
+            if let error = response["error"] {
                 
-                helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: self)
+                helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error as! String, vc: self)
             }
-            else if response["status"].string != nil {
+            else if response["status"] != nil {
                 
                 helper.giveErrorAlerts(response: response, vc: self)
             }
-            else if response != JSON.null {
+            else if response != nil {
                 
                 print("response arrived student details")
-                user = response["user"]
+                user = response["user"] as! [String: Any]
             }
         })
         

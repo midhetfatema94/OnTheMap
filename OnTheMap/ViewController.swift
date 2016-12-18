@@ -10,7 +10,6 @@ import UIKit
 import FacebookLogin
 import FacebookCore
 import FacebookShare
-import SwiftyJSON
 
 class ViewController: UIViewController, LoginButtonDelegate, UITextFieldDelegate {
 
@@ -28,18 +27,18 @@ class ViewController: UIViewController, LoginButtonDelegate, UITextFieldDelegate
             
             DispatchQueue.main.async {
                 
-                if let error = response.error {
+                if let error = response["error"] as? String {
                     
-                    print("response error: \(response.error?.localizedDescription)")
-                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: self)
+                    print("response error: \(error)")
+                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error, vc: self)
                 }
-                else if response["status"] != JSON.null {
+                else if response["status"] != nil {
                     
                     print("response error!")
                     helper.giveErrorAlerts(response: response, vc: self)
                     
                 }
-                else if response != JSON.null {
+                else if response != nil {
                     
                     DispatchQueue.main.async(execute: {
                         
@@ -99,12 +98,12 @@ class ViewController: UIViewController, LoginButtonDelegate, UITextFieldDelegate
             
             DispatchQueue.main.async {
                 
-                if let error = response.error {
+                if let error = response["error"] as? String {
                     
-                    print("response error: \(response.error?.localizedDescription)")
-                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: self)
+                    print("response error: \(error)")
+                    helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error, vc: self)
                 }
-                else if response["session"] != JSON.null {
+                else if response["session"] != nil {
                     
                     DispatchQueue.main.async(execute: {
                         
@@ -125,7 +124,7 @@ class ViewController: UIViewController, LoginButtonDelegate, UITextFieldDelegate
         print("logged out")
     }
     
-    func goToMap(response: JSON) {
+    func goToMap(response: [String: Any]) {
         
         currentUser = response
         let tabVC = self.storyboard!.instantiateViewController(withIdentifier: "tabBar")

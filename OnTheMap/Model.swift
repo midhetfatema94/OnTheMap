@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import SwiftyJSON
+import UIKit
 
 class Model {
     
-    func loginUserUdacity(username: String, password: String, controller: UIViewController, completion: @escaping ((JSON) -> Void)) {
+    func loginUserUdacity(username: String, password: String, controller: UIViewController, completion: @escaping (([String: Any]) -> Void)) {
         
         let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
         request.httpMethod = "POST"
@@ -33,8 +33,8 @@ class Model {
             print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
             do {
                 let result = try JSONSerialization.jsonObject(with: newData!, options: []) as! [String:AnyObject]
-                print("response: \(JSON(result))")
-                completion(JSON(result))
+                print("response: \(result)")
+                completion(result)
 
             } catch {
                 print("Error: \(error)")
@@ -43,7 +43,7 @@ class Model {
         task.resume()
     }
     
-    func logoutUserUdacity(controller: UIViewController, completion: @escaping ((JSON) -> Void)) {
+    func logoutUserUdacity(controller: UIViewController, completion: @escaping (([String: Any]) -> Void)) {
         
         let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
         request.httpMethod = "DELETE"
@@ -68,8 +68,8 @@ class Model {
             let newData = data?.subdata(in: range)
             do {
                 let result = try JSONSerialization.jsonObject(with: newData!, options: []) as! [String:AnyObject]
-                print("response: \(JSON(result))")
-                completion(JSON(result))
+                print("response: \(result)")
+                completion(result)
                 
             } catch {
                 print("Error: \(error)")
@@ -79,7 +79,7 @@ class Model {
         
     }
     
-    func loginUserFb(accessToken: String, controller: UIViewController, completion: @escaping ((JSON) -> Void)) {
+    func loginUserFb(accessToken: String, controller: UIViewController, completion: @escaping (([String: Any]) -> Void)) {
         
         // create post request
         let url = URL(string: "https://www.udacity.com/api/session")!
@@ -105,9 +105,9 @@ class Model {
             print("starts here fb")
             print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
             do {
-                let result = try JSONSerialization.jsonObject(with: newData!, options: [])
-                print("response: \(JSON(result))")
-                completion(JSON(result))
+                let result = try JSONSerialization.jsonObject(with: newData!, options: []) as! [String: Any]
+                print("response: \(result)")
+                completion(result)
                 
             } catch {
                 print("Error: \(error)")
@@ -117,13 +117,7 @@ class Model {
         task.resume()
     }
     
-    func logoutUserFb() {
-        
-        
-        
-    }
-    
-    func getMultipleUserLocations(sorting: Bool, controller: UIViewController, completion: @escaping ((JSON) -> Void)) {
+    func getMultipleUserLocations(sorting: Bool, controller: UIViewController, completion: @escaping (([String: Any]) -> Void)) {
         
         var request = NSMutableURLRequest()
         
@@ -151,8 +145,8 @@ class Model {
 
             do {
                 let result = try JSONSerialization.jsonObject(with: data!, options: []) as! [String:AnyObject]
-                print("response: \(JSON(result))")
-                completion(JSON(result))
+                print("response multiple user locations: \(result)")
+                completion(result)
                 
             } catch {
                 print("Error: \(error)")
@@ -161,7 +155,7 @@ class Model {
         task.resume()
     }
     
-    func getSingleUserLocation(key: String, vc: UIViewController, completion: @escaping ((JSON) -> Void)) {
+    func getSingleUserLocation(key: String, vc: UIViewController, completion: @escaping (([String: Any]) -> Void)) {
         
         let urlString = "https://parse.udacity.com/parse/classes/StudentLocation?where=%7B%22uniqueKey%22%3A%22\(key)%22%7D"
         let url = URL(string: urlString)
@@ -183,8 +177,8 @@ class Model {
             }
             do {
                 let result = try JSONSerialization.jsonObject(with: data!, options: []) as! [String:AnyObject]
-                print("response: \(JSON(result))")
-                completion(JSON(result))
+                print("response: \(result)")
+                completion(result)
                 
             } catch {
                 print("Error: \(error)")
@@ -193,7 +187,7 @@ class Model {
         task.resume()
     }
     
-    func postUserLocation(uniqueKey: String, firstName: String, lastName: String, mapString: String, media: String, latitude: Double, longitude: Double, controller: UIViewController, completion: @escaping ((JSON) -> Void)) {
+    func postUserLocation(uniqueKey: String, firstName: String, lastName: String, mapString: String, media: String, latitude: Double, longitude: Double, controller: UIViewController, completion: @escaping (([String: Any]) -> Void)) {
         
         let request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
         request.httpMethod = "POST"
@@ -212,8 +206,8 @@ class Model {
             }
             do {
                 let result = try JSONSerialization.jsonObject(with: data!, options: []) as! [String:AnyObject]
-                print("response: \(JSON(result))")
-                completion(JSON(result))
+                print("response: \(result)")
+                completion(result)
                 
             } catch {
                 print("Error: \(error)")
@@ -222,7 +216,7 @@ class Model {
         task.resume()
     }
     
-    func getUserData(uniqueKey: String, controller: UIViewController, completion: @escaping ((JSON) -> Void)) {
+    func getUserData(uniqueKey: String, controller: UIViewController, completion: @escaping (([String: Any]) -> Void)) {
         
         let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/users/\(uniqueKey)")!)
         let session = URLSession.shared
@@ -238,8 +232,8 @@ class Model {
             let newData = data?.subdata(in: range) /* subset response data! */
             do {
                 let result = try JSONSerialization.jsonObject(with: newData!, options: []) as! [String:AnyObject]
-                print("response: \(JSON(result))")
-                completion(JSON(result))
+                print("response: \(result)")
+                completion(result)
                 
             } catch {
                 print("Error: \(error)")

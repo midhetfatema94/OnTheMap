@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SwiftyJSON
 
 class StudentLocationTableViewController: UITableViewController {
     
@@ -31,7 +30,9 @@ class StudentLocationTableViewController: UITableViewController {
     
     @IBAction func placePin(_ sender: UIBarButtonItem) {
         
-        request.getSingleUserLocation(key: currentUser["account"]["key"].string!, vc: self, completion: { response in
+        let userAccount = currentUser["account"] as! [String: Any]
+        
+        request.getSingleUserLocation(key: userAccount["key"] as! String, vc: self, completion: { response in
             
             DispatchQueue.main.async(execute: {
                 

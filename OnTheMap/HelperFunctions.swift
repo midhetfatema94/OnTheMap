@@ -8,17 +8,16 @@
 
 import Foundation
 import UIKit
-import SwiftyJSON
 
 class Helper {
     
     var allStudentLocations: [StudentInformation] = []
     
-    func giveErrorAlerts(response: JSON, vc: UIViewController) {
+    func giveErrorAlerts(response: [String: Any], vc: UIViewController) {
         
 //        var alert = UIAlertController(title: "Error!", message: "\(response["error"].string!)", preferredStyle: .alert)
         
-        if let responseError = response["error"].string {
+        if let responseError: String = response["error"] as? String {
             
             let errorSplit = responseError.components(separatedBy: ":")
             giveErrorAlerts(errorString: "", errorMessage: errorSplit.last!, vc: vc)
@@ -35,14 +34,14 @@ class Helper {
         vc.present(alert, animated: true, completion: nil)
     }
     
-    func logout(response: JSON, viewController: UIViewController) {
+    func logout(response: [String: Any], viewController: UIViewController) {
         
-        if let error = response.error {
+        if let error = response["error"] {
             
-            print("error creating request: \(error.localizedDescription)")
-            helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: viewController)
+            print("error creating request: \(error)")
+            helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error as! String, vc: viewController)
         }
-        else if response != JSON.null {
+        else if response != nil {
             
             let allvcs = mainNav.viewControllers
             
@@ -60,22 +59,25 @@ class Helper {
         
     }
     
-    func postPin(response: JSON, viewController: UIViewController) {
+    func postPin(response: [String: Any], viewController: UIViewController) {
         
-        if let error = response.error {
+        if let error = response["error"] {
             
-            print("Error creating a request: \(error.localizedDescription)")
-            helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: viewController)
+            print("Error creating a request: \(error)")
+            helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error as! String, vc: viewController)
             
         }
-        else if response["results"].array!.count > 0 {
+        else if let myResponse: [[String: Any]] = response["results"] as? [[String : Any]] {
             
-            let alert = UIAlertController(title: nil, message: "You have already posted a student location. Would you like to overwrite your current location?", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Overwrite", style: .default, handler: {_ in
-                self.postStudentLocation(vc: viewController)
-            }))
-            alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
-            viewController.present(alert, animated: true, completion: nil)
+            if myResponse.count > 0 {
+                
+                let alert = UIAlertController(title: nil, message: "You have already posted a student location. Would you like to overwrite your current location?", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Overwrite", style: .default, handler: {_ in
+                    self.postStudentLocation(vc: viewController)
+                }))
+                alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+                viewController.present(alert, animated: true, completion: nil)
+            }
         }
         else {
             
@@ -89,20 +91,22 @@ class Helper {
         vc.navigationController!.present(setLocVC, animated: true, completion: nil)
     }
     
-    func studentLocationJSONToStruct(response: [JSON]) -> [StudentInformation] {
+    func studentLocationJSONToStruct(response: [[String: Any]]) -> [StudentInformation] {
         
         allStudentLocations = []
+        
+//        let theResponse: [String: Any] = response as! [String: Any]
         
         for each in response {
             
             
-            let first = makeVariables(variable: each["firstName"].string)
-            let last = makeVariables(variable: each["lastName"].string)
-            let unique = makeVariables(variable: each["uniqueKey"].string)
-            let lati = makeVariables(variable: each["latitude"].double)
-            let longi = makeVariables(variable: each["longitude"].double)
-            let map = makeVariables(variable: each["mapString"].string)
-            let media = makeVariables(variable: each["mediaURL"].string)
+            let first = makeVariables(variable: each["firstName"] as? String)
+            let last = makeVariables(variable: each["lastName"] as? String)
+            let unique = makeVariables(variable: each["uniqueKey"] as? String)
+            let lati = makeVariables(variable: each["latitude"] as? Double)
+            let longi = makeVariables(variable: each["longitude"] as? Double)
+            let map = makeVariables(variable: each["mapString"] as? String)
+            let media = makeVariables(variable: each["mediaURL"] as? String)
             
             let info: [String : Any] = ["firstName": first, "lastName": last, "key": unique, "location": StudentLocation(lat: lati, long: longi, map: map), "mediaurl": media]
             
@@ -138,17 +142,17 @@ class Helper {
         return varChar
     }
     
-    func allStudentLocations(response: JSON, controller: UIViewController) -> (flag: Bool, array: [StudentInformation]) {
+    func allStudentLocations(response: [String: Any], controller: UIViewController) -> (flag: Bool, array: [StudentInformation]) {
         
-        if let error = response.error {
+        if let error = response["error"] as? String {
             
-            print("Error creating request: \(error.localizedDescription)")
-            helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error.localizedDescription, vc: controller)
+            print("Error creating request: \(error)")
+            helper.giveErrorAlerts(errorString: "Error creating request", errorMessage: error, vc: controller)
             return (false, [])
         }
-        else if response["results"] != JSON.null {
+        else if response["results"] != nil {
             
-            let results = helper.studentLocationJSONToStruct(response: response["results"].array!)
+            let results = helper.studentLocationJSONToStruct(response: response["results"] as! [[String: Any]])
             return (true, results)
         }
         else {
